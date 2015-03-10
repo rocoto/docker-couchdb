@@ -1,28 +1,40 @@
-FROM ubuntu:14.04.1
+FROM debian:wheezy
 MAINTAINER Lupo Montero
 
-VOLUME ["/data"]
-EXPOSE 5984
+RUN apt-get update -y
+RUN apt-get install -y --no-install-recommends build-essential
+RUN apt-get install -y --no-install-recommends libicu-dev
+RUN apt-get install -y --no-install-recommends libcurl4-openssl-dev
+RUN apt-get install -y --no-install-recommends libmozjs185-dev
 
-RUN sudo apt-get update -y
-RUN sudo apt-get install -y build-essential erlang-base-hipe erlang-dev \
-  erlang-manpages erlang-eunit erlang-nox libicu-dev libmozjs185-dev \
-  libcurl4-openssl-dev wget
+RUN apt-get install -y --no-install-recommends \
+  erlang-base-hipe \
+  erlang-dev \
+  erlang-manpages \
+  erlang-eunit \
+  erlang-nox 
+
+RUN apt-get install -y wget sudo
 
 RUN cd /tmp \
   && wget http://mirror.cc.columbia.edu/pub/software/apache/couchdb/source/1.6.1/apache-couchdb-1.6.1.tar.gz \
   && tar xvzf apache-couchdb-*
 
-RUN cd /tmp/apache-couchdb-* && ./configure && make && sudo make install
+RUN cd /tmp/apache-couchdb-* && ./configure && make && make install
 
-RUN adduser --system \
-  --home /usr/local/var/lib/couchdb \
+RUN useradd --system -M \
+  --home /data \
   --shell /bin/bash \
-  --group --gecos \
-  "CouchDB Administrator" couchdb
+  --user-group \
+  --comment "CouchDB Administrator" \
+  couchdb
 
-COPY ./couch.ini /usr/local/etc/couchdb/local.d/local.ini
+COPY ./local.ini /local.ini
 COPY ./entrypoint.sh /entrypoint.sh
+
+VOLUME ["/data"]
+EXPOSE 5984
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["couchdb"]
+
