@@ -20,9 +20,7 @@ if [ "$1" = 'couchdb' ]; then
   find /data -type d -exec chmod 775 {} \;
   find /data -type f -exec chmod 664 {} \;
 
-  HOME=/data sudo -i -u couchdb sh -c "couchdb -o /data/log/stdout.log -e
-  /data/log/stderr.log -p /data/couchdb.pid -n -a /data/etc/default.ini -a
-  /data/etc/local.ini"
+  HOME=/data sudo -i -u couchdb sh -c "couchdb -p /data/couchdb.pid -n -a /data/etc/default.ini -a /data/etc/local.ini"
 else
   exec "$@"
 fi

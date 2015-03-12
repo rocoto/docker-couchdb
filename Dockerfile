@@ -26,14 +26,11 @@ RUN apt-get update \
   && cd - && rm -rf apache-couchdb-* \
   && apt-get remove -y \
     build-essential \
-    libicu-dev \
     libcurl4-openssl-dev \
     libmozjs185-dev \
-    erlang-base-hipe \
     erlang-dev \
     erlang-manpages \
-    erlang-eunit \
-    erlang-nox \
+    wget \
   && apt-get autoremove -y \
   && apt-get clean
 
@@ -44,8 +41,8 @@ RUN useradd --system -M \
   --comment "CouchDB Administrator" \
   couchdb
 
-COPY ./local.ini /local.ini
-COPY ./entrypoint.sh /entrypoint.sh
+ADD ./local.ini /local.ini
+ADD ./entrypoint.sh /entrypoint.sh
 
 VOLUME ["/data"]
 EXPOSE 5984
