@@ -12,7 +12,7 @@ docker pull rocoto/couchdb
 docker run -it -p 5984:5984 -v /path/on/host:/data rocoto/couchdb
 ```
 
-## File structire in data volume
+## File structure in data volume
 
 ```
 ./
