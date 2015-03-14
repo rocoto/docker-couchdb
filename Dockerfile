@@ -26,8 +26,6 @@ RUN apt-get update \
   && cd - && rm -rf apache-couchdb-* \
   && apt-get remove -y \
     build-essential \
-    libcurl4-openssl-dev \
-    libmozjs185-dev \
     erlang-dev \
     erlang-manpages \
     wget \
