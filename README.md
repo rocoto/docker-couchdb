@@ -3,7 +3,7 @@
 Yet another `CouchDB` container.
 
 * Built on `Debian`.
-* Currently 346.8 Mb image.
+* Currently 312.1 Mb image.
 * Runs as `couchdb` user.
 * Puts all data (databases, views, config files) in a single data volume.
 
