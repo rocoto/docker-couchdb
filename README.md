@@ -22,6 +22,16 @@ docker create -v /path/on/host:/data --name couch-data rocoto/couchdb
 docker run -it -p 5984:5984 --volumes-from couch-data rocoto/couchdb
 ```
 
+## Environment Variables
+
+By default CouchDB starts in _admin party_ mode. To have an admin user
+automatically created you can use the `COUCHDB_ADMIN_PASSWORD` environment
+variable.
+
+```sh
+docker run -it --rm -p 5984:5984 -e COUCHDB_ADMIN_PASSWORD=secret rocoto/couchdb
+```
+
 ## File structure in data volume
 
 ```

@@ -15,12 +15,20 @@ if [ "$1" = 'couchdb' ]; then
     cp /local.ini /data/etc/local.ini
   fi
 
+  cmd="couchdb -p /data/couchdb.pid -n -a /data/etc/default.ini -a /data/etc/local.ini"
+
+  if [ -n "$COUCHDB_ADMIN_PASSWORD" ]; then
+    echo "[admins]" > /data/etc/admins.ini
+    echo "admin = $COUCHDB_ADMIN_PASSWORD" >> /data/etc/admins.ini
+    cmd="$cmd -a /data/etc/admins.ini"
+  fi
+
   chown -R couchdb:couchdb /data
   chmod 0770 /data
   find /data -type d -exec chmod 775 {} \;
   find /data -type f -exec chmod 664 {} \;
 
-  HOME=/data sudo -i -u couchdb sh -c "couchdb -p /data/couchdb.pid -n -a /data/etc/default.ini -a /data/etc/local.ini"
+  HOME=/data sudo -i -u couchdb sh -c "$cmd"
 else
   exec "$@"
 fi
