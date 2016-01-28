@@ -18,9 +18,19 @@ if [ "$1" = 'couchdb' ]; then
   cmd="couchdb -p /data/couchdb.pid -n -a /data/etc/default.ini -a /data/etc/local.ini"
 
   if [ -n "$COUCHDB_ADMIN_PASSWORD" ]; then
-    echo "[admins]" > /data/etc/admins.ini
-    echo "admin = $COUCHDB_ADMIN_PASSWORD" >> /data/etc/admins.ini
-    cmd="$cmd -a /data/etc/admins.ini"
+    # Add [admins] section if not present in local.ini
+    if ! grep -e '^\[admins\]' /data/etc/local.ini &>/dev/null; then
+      echo "" >> /data/etc/local.ini
+      echo "[admins]" >> /data/etc/local.ini
+    fi
+
+    # remove admin user if already present
+    grep -ve '^admin\s=' /data/etc/local.ini > /data/etc/local.ini.tmp
+    rm /data/etc/local.ini
+    mv /data/etc/local.ini.tmp /data/etc/local.ini
+
+    # Add admin user
+    sed -i 's,^\[admins\],[admins]\nadmin = '"$COUCHDB_ADMIN_PASSWORD"',g' /data/etc/local.ini
   fi
 
   chown -R couchdb:couchdb /data
